@@ -1,0 +1,477 @@
+[
+  {
+    "id": "rm_89511921",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Thames Quarter, Reading",
+    "location": {
+      "area": "Thames Quarter, Reading"
+    },
+    "price": {
+      "amount": 2200,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89511921#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.740Z"
+  },
+  {
+    "id": "rm_87438813",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Kings Road, Reading, RG1",
+    "location": {
+      "area": "Kings Road, Reading, RG1"
+    },
+    "price": {
+      "amount": 560,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/87438813#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.744Z"
+  },
+  {
+    "id": "rm_89669745",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Robert Parker Road, Reading, RG1",
+    "location": {
+      "area": "Robert Parker Road, Reading, RG1"
+    },
+    "price": {
+      "amount": 2600,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 4
+    },
+    "url": "https://www.rightmove.co.uk/properties/89669745#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.746Z"
+  },
+  {
+    "id": "rm_89661510",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Mount Pleasant, Reading, RG1",
+    "location": {
+      "area": "Mount Pleasant, Reading, RG1"
+    },
+    "price": {
+      "amount": 1900,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89661510#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.747Z"
+  },
+  {
+    "id": "rm_89658105",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Duke Street, Reading, Berkshire, RG1",
+    "location": {
+      "area": "Duke Street, Reading, Berkshire, RG1"
+    },
+    "price": {
+      "amount": 1275,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89658105#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.747Z"
+  },
+  {
+    "id": "rm_89655399",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "3 Joseph Huntley Walk, Reading",
+    "location": {
+      "area": "3 Joseph Huntley Walk, Reading"
+    },
+    "price": {
+      "amount": 1570,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89655399#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.748Z"
+  },
+  {
+    "id": "rm_89654085",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "35 Palmer Street, Reading",
+    "location": {
+      "area": "35 Palmer Street, Reading"
+    },
+    "price": {
+      "amount": 1940,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89654085#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.749Z"
+  },
+  {
+    "id": "rm_89648178",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Coley Hill, Reading, Berkshire, RG1",
+    "location": {
+      "area": "Coley Hill, Reading, Berkshire, RG1"
+    },
+    "price": {
+      "amount": 950,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89648178#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.749Z"
+  },
+  {
+    "id": "rm_89647107",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "London Road, Reading, RG1",
+    "location": {
+      "area": "London Road, Reading, RG1"
+    },
+    "price": {
+      "amount": 1700,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89647107#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.750Z"
+  },
+  {
+    "id": "rm_89646669",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Charnwood House, Rembrandt Way, Reading",
+    "location": {
+      "area": "Charnwood House, Rembrandt Way, Reading"
+    },
+    "price": {
+      "amount": 1350,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89646669#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.751Z"
+  },
+  {
+    "id": "rm_89647098",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Thames Quarter, Napier Road, Reading",
+    "location": {
+      "area": "Thames Quarter, Napier Road, Reading"
+    },
+    "price": {
+      "amount": 2000,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89647098#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.751Z"
+  },
+  {
+    "id": "rm_89646954",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Thames Quarter, Napier Road, Reading",
+    "location": {
+      "area": "Thames Quarter, Napier Road, Reading"
+    },
+    "price": {
+      "amount": 2000,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89646954#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.752Z"
+  },
+  {
+    "id": "rm_88650612",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Dorothy Street, Reading, RG1",
+    "location": {
+      "area": "Dorothy Street, Reading, RG1"
+    },
+    "price": {
+      "amount": 2500,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88650612#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.752Z"
+  },
+  {
+    "id": "rm_174259499",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Napier Road Reading RG1",
+    "location": {
+      "area": "Napier Road Reading RG1"
+    },
+    "price": {
+      "amount": 1400,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/174259499#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.753Z"
+  },
+  {
+    "id": "rm_89636481",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Russell Street, Reading, Berkshire, RG1",
+    "location": {
+      "area": "Russell Street, Reading, Berkshire, RG1"
+    },
+    "price": {
+      "amount": 1000,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89636481#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.753Z"
+  },
+  {
+    "id": "rm_87880854",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Market Place, Reading, Berkshire, RG1",
+    "location": {
+      "area": "Market Place, Reading, Berkshire, RG1"
+    },
+    "price": {
+      "amount": 1200,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/87880854#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.754Z"
+  },
+  {
+    "id": "rm_174132482",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Market Place, Reading, Berkshire, RG1",
+    "location": {
+      "area": "Market Place, Reading, Berkshire, RG1"
+    },
+    "price": {
+      "amount": 1150,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/174132482#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.754Z"
+  },
+  {
+    "id": "rm_89634261",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Jacksons Corner, High street, RG1",
+    "location": {
+      "area": "Jacksons Corner, High street, RG1"
+    },
+    "price": {
+      "amount": 1250,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89634261#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.754Z"
+  },
+  {
+    "id": "rm_88562127",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Liverpool Road, Reading, Berkshire, RG1",
+    "location": {
+      "area": "Liverpool Road, Reading, Berkshire, RG1"
+    },
+    "price": {
+      "amount": 1650,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88562127#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.755Z"
+  },
+  {
+    "id": "rm_89623038",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Silver Street, Reading, RG1",
+    "location": {
+      "area": "Silver Street, Reading, RG1"
+    },
+    "price": {
+      "amount": 1600,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89623038#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.755Z"
+  },
+  {
+    "id": "rm_89623023",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Bridge Street, Reading, Berkshire, RG1",
+    "location": {
+      "area": "Bridge Street, Reading, Berkshire, RG1"
+    },
+    "price": {
+      "amount": 1400,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89623023#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.756Z"
+  },
+  {
+    "id": "rm_89541591",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Cholmeley Road, Reading, RG1 3LR",
+    "location": {
+      "area": "Cholmeley Road, Reading, RG1 3LR"
+    },
+    "price": {
+      "amount": 725,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89541591#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.756Z"
+  },
+  {
+    "id": "rm_89607987",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "3 Joseph Huntley Walk, Reading",
+    "location": {
+      "area": "3 Joseph Huntley Walk, Reading"
+    },
+    "price": {
+      "amount": 1980,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89607987#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.756Z"
+  },
+  {
+    "id": "rm_89606844",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Alleyne Close, Reading, RG1",
+    "location": {
+      "area": "Alleyne Close, Reading, RG1"
+    },
+    "price": {
+      "amount": 1550,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89606844#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.757Z"
+  },
+  {
+    "id": "rm_89210823",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Western Road, Reading, RG1",
+    "location": {
+      "area": "Western Road, Reading, RG1"
+    },
+    "price": {
+      "amount": 1700,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89210823#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:14:50.757Z"
+  }
+]

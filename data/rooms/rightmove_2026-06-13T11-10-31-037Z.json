@@ -1,0 +1,477 @@
+[
+  {
+    "id": "rm_89657292",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Heath Street, Hampstead, NW3",
+    "location": {
+      "area": "Heath Street, Hampstead, NW3"
+    },
+    "price": {
+      "amount": 3012,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89657292#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.012Z"
+  },
+  {
+    "id": "rm_89381649",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Wandsworth, London, SW18",
+    "location": {
+      "area": "Wandsworth, London, SW18"
+    },
+    "price": {
+      "amount": 1750,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89381649#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.016Z"
+  },
+  {
+    "id": "rm_89155155",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Ashbourne Road, Mitcham, CR4",
+    "location": {
+      "area": "Ashbourne Road, Mitcham, CR4"
+    },
+    "price": {
+      "amount": 990,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89155155#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.016Z"
+  },
+  {
+    "id": "rm_89673447",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Commercial Street, London, E1",
+    "location": {
+      "area": "Commercial Street, London, E1"
+    },
+    "price": {
+      "amount": 2750,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 2
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673447#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.017Z"
+  },
+  {
+    "id": "rm_89673432",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Baker Street, Marylebone, London, NW1",
+    "location": {
+      "area": "Baker Street, Marylebone, London, NW1"
+    },
+    "price": {
+      "amount": 9447,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673432#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.017Z"
+  },
+  {
+    "id": "rm_172609403",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "James House, Appleford Road, London, W10",
+    "location": {
+      "area": "James House, Appleford Road, London, W10"
+    },
+    "price": {
+      "amount": 2850,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/172609403#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.018Z"
+  },
+  {
+    "id": "rm_89673399",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Baker Street, Marylebone, London, NW1",
+    "location": {
+      "area": "Baker Street, Marylebone, London, NW1"
+    },
+    "price": {
+      "amount": 7973,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673399#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.018Z"
+  },
+  {
+    "id": "rm_89673387",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": ", Coombe Hill House, Beverley Way, London",
+    "location": {
+      "area": ", Coombe Hill House, Beverley Way, London"
+    },
+    "price": {
+      "amount": 2050,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673387#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.018Z"
+  },
+  {
+    "id": "rm_89673321",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Carlton Hill, London, NW8",
+    "location": {
+      "area": "Carlton Hill, London, NW8"
+    },
+    "price": {
+      "amount": 2500,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673321#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.018Z"
+  },
+  {
+    "id": "rm_89673318",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Florence House, Colindale Gardens, NW9",
+    "location": {
+      "area": "Florence House, Colindale Gardens, NW9"
+    },
+    "price": {
+      "amount": 1950,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673318#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.019Z"
+  },
+  {
+    "id": "rm_88072695",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Harley Street, Marylebone, London, W1G",
+    "location": {
+      "area": "Harley Street, Marylebone, London, W1G"
+    },
+    "price": {
+      "amount": 8558,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88072695#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.019Z"
+  },
+  {
+    "id": "rm_89673291",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Alderbrook Road, Wandsworth, London",
+    "location": {
+      "area": "Alderbrook Road, Wandsworth, London"
+    },
+    "price": {
+      "amount": 2000,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673291#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.020Z"
+  },
+  {
+    "id": "rm_89673288",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Florence House, Colindale, NW9",
+    "location": {
+      "area": "Florence House, Colindale, NW9"
+    },
+    "price": {
+      "amount": 1880,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673288#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.020Z"
+  },
+  {
+    "id": "rm_88949040",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Lupus Street, Pimlico, London, SW1V",
+    "location": {
+      "area": "Lupus Street, Pimlico, London, SW1V"
+    },
+    "price": {
+      "amount": 6067,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88949040#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.020Z"
+  },
+  {
+    "id": "rm_88017693",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "The Water Gardens, Hyde Park, London, W2",
+    "location": {
+      "area": "The Water Gardens, Hyde Park, London, W2"
+    },
+    "price": {
+      "amount": 6045,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88017693#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.020Z"
+  },
+  {
+    "id": "rm_172053278",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Circus Lodge, Circus Road, St John's Wood, London, NW8",
+    "location": {
+      "area": "Circus Lodge, Circus Road, St John's Wood, London, NW8"
+    },
+    "price": {
+      "amount": 5612,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/172053278#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.021Z"
+  },
+  {
+    "id": "rm_89673243",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Hastings Road*****",
+    "location": {
+      "area": "Hastings Road*****"
+    },
+    "price": {
+      "amount": 1500,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673243#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.021Z"
+  },
+  {
+    "id": "rm_171507980",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Cavendish House, 21 Wellington Road, St John's Wood, London, NW8",
+    "location": {
+      "area": "Cavendish House, 21 Wellington Road, St John's Wood, London, NW8"
+    },
+    "price": {
+      "amount": 4312,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/171507980#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.021Z"
+  },
+  {
+    "id": "rm_88358541",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Bridgeway Street, NW1",
+    "location": {
+      "area": "Bridgeway Street, NW1"
+    },
+    "price": {
+      "amount": 3699,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88358541#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.021Z"
+  },
+  {
+    "id": "rm_89673207",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Florence House, Colindale, NW9",
+    "location": {
+      "area": "Florence House, Colindale, NW9"
+    },
+    "price": {
+      "amount": 1750,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673207#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.022Z"
+  },
+  {
+    "id": "rm_89673195",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Single Room Beaford Grove, London",
+    "location": {
+      "area": "Single Room Beaford Grove, London"
+    },
+    "price": {
+      "amount": 600,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673195#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.022Z"
+  },
+  {
+    "id": "rm_89673174",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Victory Place, Trafalgar Place, Elephant & Castle, London, SE17",
+    "location": {
+      "area": "Victory Place, Trafalgar Place, Elephant & Castle, London, SE17"
+    },
+    "price": {
+      "amount": 5850,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/89673174#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.022Z"
+  },
+  {
+    "id": "rm_88148313",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Chalk Farm Road, Camden Town, London, NW1",
+    "location": {
+      "area": "Chalk Farm Road, Camden Town, London, NW1"
+    },
+    "price": {
+      "amount": 3012,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88148313#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.022Z"
+  },
+  {
+    "id": "rm_88017954",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Chelsea Cloisters, Sloane Avenue, Chelsea, London, SW3",
+    "location": {
+      "area": "Chelsea Cloisters, Sloane Avenue, Chelsea, London, SW3"
+    },
+    "price": {
+      "amount": 2687,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/88017954#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.023Z"
+  },
+  {
+    "id": "rm_174726563",
+    "motive": "rooms",
+    "source": "Rightmove",
+    "title": "Strathmore Court, 143 Park Road, St John's Wood, London, NW8",
+    "location": {
+      "area": "Strathmore Court, 143 Park Road, St John's Wood, London, NW8"
+    },
+    "price": {
+      "amount": 2492,
+      "currency": "GBP",
+      "frequency": "monthly"
+    },
+    "details": {
+      "bedrooms": 0
+    },
+    "url": "https://www.rightmove.co.uk/properties/174726563#/?channel=RES_LET",
+    "scraped_at": "2026-06-13T11:10:29.023Z"
+  }
+]
