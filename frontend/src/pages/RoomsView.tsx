@@ -6,7 +6,7 @@ import { StatusBadge } from '../components/StatusBadge';
 import { FilterPanel, type FilterState } from '../components/FilterPanel';
 import type { Room } from '@scrapping/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Download } from 'lucide-react';
 
 const columnHelper = createColumnHelper<Room>();
@@ -72,7 +72,7 @@ export function RoomsView() {
   const { data: status } = useQuery({
     queryKey: ['status', 'rooms'],
     queryFn: () => fetchStatus('rooms'),
-    refetchInterval: 2000, // Poll every 2 seconds to get live progress
+    refetchInterval: (query) => query.state.data?.status === 'scraping' ? 2000 : false,
   });
 
   const { data = [], isLoading, isFetching } = useQuery({
@@ -119,25 +119,16 @@ export function RoomsView() {
     setAppliedFilters(emptyFilters);
   };
 
-  const applyFilterFunction = (data: Room[]) => {
-    return data.filter(room => {
-      // Price filter
-      if (appliedFilters.priceMin !== '' && room.price.amount < appliedFilters.priceMin) {
-        return false;
-      }
-      if (appliedFilters.priceMax !== '' && room.price.amount > appliedFilters.priceMax) {
-        return false;
-      }
+  const filteredData = useMemo(() => {
+    return data.filter((room: Room) => {
+      if (appliedFilters.priceMin !== '' && room.price.amount < appliedFilters.priceMin) return false;
+      if (appliedFilters.priceMax !== '' && room.price.amount > appliedFilters.priceMax) return false;
 
-      // Location filter
       if (appliedFilters.location.trim() !== '') {
         const searchLower = appliedFilters.location.toLowerCase();
-        if (!room.location.area.toLowerCase().includes(searchLower)) {
-          return false;
-        }
+        if (!room.location.area.toLowerCase().includes(searchLower)) return false;
       }
 
-      // Bedrooms filter
       if (appliedFilters.bedrooms.length > 0) {
         if (room.details.bedrooms === undefined) return false;
         const bedroomMatch = appliedFilters.bedrooms.some(b => {
@@ -148,7 +139,6 @@ export function RoomsView() {
         if (!bedroomMatch) return false;
       }
 
-      // Property Type filter
       if (appliedFilters.propertyType.length > 0) {
         if (!room.details.propertyType) return false;
         const typeMatch = appliedFilters.propertyType.some(t =>
@@ -157,7 +147,6 @@ export function RoomsView() {
         if (!typeMatch) return false;
       }
 
-      // Furnished filter
       if (appliedFilters.furnished.length > 0) {
         if (!room.details.furnished) return false;
         const furnishedMatch = appliedFilters.furnished.some(f =>
@@ -166,7 +155,6 @@ export function RoomsView() {
         if (!furnishedMatch) return false;
       }
 
-      // Lease Type filter
       if (appliedFilters.leaseType.length > 0) {
         if (!room.details.leaseType) return false;
         const leaseMatch = appliedFilters.leaseType.some(l =>
@@ -177,7 +165,7 @@ export function RoomsView() {
 
       return true;
     });
-  };
+  }, [data, appliedFilters]);
 
   const isScraping = mutation.isPending || status?.status === 'scraping';
   const scrapeCount = status?.count || 0;
@@ -249,14 +237,13 @@ export function RoomsView() {
         <div className="data-section">
           <div className="results-info">
             <p>
-              Showing <strong>{applyFilterFunction(data).length}</strong> of <strong>{data.length}</strong> rooms
-              {applyFilterFunction(data).length !== data.length && ' (filtered)'}
+              Showing <strong>{filteredData.length}</strong> of <strong>{data.length}</strong> rooms
+              {filteredData.length !== data.length && ' (filtered)'}
             </p>
           </div>
-          <DataTable 
-            data={data} 
+          <DataTable
+            data={filteredData}
             columns={columns}
-            filterFunction={applyFilterFunction}
           />
         </div>
       )}
