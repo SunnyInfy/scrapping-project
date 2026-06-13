@@ -9,6 +9,7 @@ export interface FilterState {
   furnished: string[];
   leaseType: string[];
   location: string;
+  postcode: string;
 }
 
 interface FilterPanelProps {
@@ -27,17 +28,11 @@ export function FilterPanel({ filters, setFilters, onApply, onClear }: FilterPan
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handlePriceMinChange = (value: string) => {
-    setFilters({
-      ...filters,
-      priceMin: value === '' ? '' : parseFloat(value) || '',
-    });
+    setFilters({ ...filters, priceMin: value === '' ? '' : parseFloat(value) || '' });
   };
 
   const handlePriceMaxChange = (value: string) => {
-    setFilters({
-      ...filters,
-      priceMax: value === '' ? '' : parseFloat(value) || '',
-    });
+    setFilters({ ...filters, priceMax: value === '' ? '' : parseFloat(value) || '' });
   };
 
   const handleBedroomToggle = (bedroom: string) => {
@@ -76,30 +71,25 @@ export function FilterPanel({ filters, setFilters, onApply, onClear }: FilterPan
     });
   };
 
-  const handleLocationChange = (value: string) => {
-    setFilters({
-      ...filters,
-      location: value,
-    });
-  };
-
-  const hasActiveFilters = 
+  const hasActiveFilters =
     filters.priceMin !== '' ||
     filters.priceMax !== '' ||
     filters.bedrooms.length > 0 ||
     filters.propertyType.length > 0 ||
     filters.furnished.length > 0 ||
     filters.leaseType.length > 0 ||
-    filters.location.trim() !== '';
+    filters.location.trim() !== '' ||
+    filters.postcode.trim() !== '';
 
-  const activeFilterCount = 
+  const activeFilterCount =
     (filters.priceMin !== '' ? 1 : 0) +
     (filters.priceMax !== '' ? 1 : 0) +
     filters.bedrooms.length +
     filters.propertyType.length +
     filters.furnished.length +
     filters.leaseType.length +
-    (filters.location.trim() !== '' ? 1 : 0);
+    (filters.location.trim() !== '' ? 1 : 0) +
+    (filters.postcode.trim() !== '' ? 1 : 0);
 
   return (
     <div className="filter-panel">
@@ -152,8 +142,20 @@ export function FilterPanel({ filters, setFilters, onApply, onClear }: FilterPan
             <input
               type="text"
               value={filters.location}
-              onChange={(e) => handleLocationChange(e.target.value)}
+              onChange={(e) => setFilters({ ...filters, location: e.target.value })}
               placeholder="Search location..."
+              className="filter-input"
+            />
+          </div>
+
+          {/* Postcode (exact) */}
+          <div className="filter-section">
+            <h4 className="filter-section-title">Postcode</h4>
+            <input
+              type="text"
+              value={filters.postcode}
+              onChange={(e) => setFilters({ ...filters, postcode: e.target.value })}
+              placeholder="e.g. E1 1AA or E1"
               className="filter-input"
             />
           </div>
@@ -232,14 +234,14 @@ export function FilterPanel({ filters, setFilters, onApply, onClear }: FilterPan
 
           {/* Action Buttons */}
           <div className="filter-actions">
-            <button 
+            <button
               onClick={onApply}
               disabled={!hasActiveFilters}
               className="filter-btn filter-btn-apply"
             >
               Apply Filters
             </button>
-            <button 
+            <button
               onClick={onClear}
               disabled={!hasActiveFilters}
               className="filter-btn filter-btn-clear"

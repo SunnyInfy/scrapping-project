@@ -5,7 +5,7 @@ import PQueue from 'p-queue';
 export interface ScrapeOptions {
   maxRetries?: number;
   delayMs?: number;
-  onProgress?: (count: number) => void;
+  onProgress?: (count: number, total: number) => void;
 }
 
 export abstract class BaseScraper<T> {

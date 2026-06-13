@@ -1,8 +1,11 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
+  getSortedRowModel,
+  getPaginationRowModel,
   flexRender,
+  type SortingState,
 } from '@tanstack/react-table';
 
 const PAGE_SIZE = 50;
@@ -13,24 +16,32 @@ interface DataTableProps {
 }
 
 export function DataTable({ data, columns }: DataTableProps) {
-  const [page, setPage] = useState(0);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [pageIndex, setPageIndex] = useState(0);
 
   useEffect(() => {
-    setPage(0);
+    setPageIndex(0);
   }, [data]);
 
-  const pageCount = Math.ceil(data.length / PAGE_SIZE);
-
-  const pageData = useMemo(
-    () => data.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
-    [data, page]
-  );
-
   const table = useReactTable({
-    data: pageData,
+    data,
     columns,
+    state: {
+      sorting,
+      pagination: { pageIndex, pageSize: PAGE_SIZE },
+    },
+    onSortingChange: setSorting,
+    onPaginationChange: (updater) => {
+      const next = typeof updater === 'function' ? updater({ pageIndex, pageSize: PAGE_SIZE }) : updater;
+      setPageIndex(next.pageIndex);
+    },
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const pageCount = table.getPageCount();
+  const rows = table.getRowModel().rows;
 
   return (
     <div>
@@ -40,20 +51,30 @@ export function DataTable({ data, columns }: DataTableProps) {
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
+                  <th
+                    key={header.id}
+                    onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
+                    className={header.column.getCanSort() ? 'sortable-col' : ''}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <span className="header-content">
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.column.getCanSort() && (
+                          <span className="sort-icon">
+                            {header.column.getIsSorted() === 'asc' ? ' ↑'
+                              : header.column.getIsSorted() === 'desc' ? ' ↓'
+                              : ' ↕'}
+                          </span>
                         )}
+                      </span>
+                    )}
                   </th>
                 ))}
               </tr>
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map(row => (
+            {rows.map(row => (
               <tr key={row.id}>
                 {row.getVisibleCells().map(cell => (
                   <td key={cell.id}>
@@ -65,25 +86,33 @@ export function DataTable({ data, columns }: DataTableProps) {
           </tbody>
         </table>
       </div>
+
       {pageCount > 1 && (
         <div className="pagination">
           <button
             className="page-btn"
-            onClick={() => setPage(p => p - 1)}
-            disabled={page === 0}
-          >
-            ← Previous
-          </button>
+            onClick={() => setPageIndex(0)}
+            disabled={pageIndex === 0}
+          >«</button>
+          <button
+            className="page-btn"
+            onClick={() => setPageIndex(i => Math.max(0, i - 1))}
+            disabled={pageIndex === 0}
+          >‹</button>
           <span className="page-info">
-            Page {page + 1} of {pageCount} &nbsp;·&nbsp; {data.length} results
+            Page {pageIndex + 1} of {pageCount}
+            <span className="page-info-total"> ({data.length} total)</span>
           </span>
           <button
             className="page-btn"
-            onClick={() => setPage(p => p + 1)}
-            disabled={page >= pageCount - 1}
-          >
-            Next →
-          </button>
+            onClick={() => setPageIndex(i => Math.min(pageCount - 1, i + 1))}
+            disabled={pageIndex >= pageCount - 1}
+          >›</button>
+          <button
+            className="page-btn"
+            onClick={() => setPageIndex(pageCount - 1)}
+            disabled={pageIndex >= pageCount - 1}
+          >»</button>
         </div>
       )}
     </div>

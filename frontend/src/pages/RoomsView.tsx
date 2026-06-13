@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchResults, fetchStatus, triggerScrape } from '../services/api';
+import { fetchResults, fetchStatus, triggerScrape, fetchSources } from '../services/api';
 import { DataTable } from '../components/DataTable';
 import { ProgressBar } from '../components/ProgressBar';
 import { StatusBadge } from '../components/StatusBadge';
@@ -11,63 +11,82 @@ import { Download } from 'lucide-react';
 
 const columnHelper = createColumnHelper<Room>();
 
+const EMPTY_FILTER: FilterState = {
+  priceMin: '',
+  priceMax: '',
+  bedrooms: [],
+  propertyType: [],
+  furnished: [],
+  leaseType: [],
+  location: '',
+  postcode: '',
+};
+
 const columns = [
-  columnHelper.accessor('title', { header: 'Title' }),
-  columnHelper.accessor('location.area', { header: 'Location' }),
+  columnHelper.accessor('source', { header: 'Source', enableSorting: false }),
+  columnHelper.accessor('title', { header: 'Title', enableSorting: true }),
+  columnHelper.accessor('location.area', { header: 'Location', enableSorting: false }),
+  columnHelper.accessor('location.postcode', {
+    header: 'Postcode',
+    enableSorting: false,
+    cell: info => info.getValue() ?? '—',
+  }),
   columnHelper.accessor('price.amount', {
     header: 'Price',
-    cell: info => `£${info.getValue()}`
+    enableSorting: true,
+    cell: info => `£${info.getValue()}`,
   }),
-  columnHelper.accessor('price.frequency', { header: 'Frequency' }),
-  columnHelper.accessor('details.bedrooms', { header: 'Beds' }),
-  columnHelper.accessor('details.bathrooms', { header: 'Baths' }),
-  columnHelper.accessor('details.propertyType', { header: 'Type' }),
-  columnHelper.accessor('details.furnished', { header: 'Furnished' }),
+  columnHelper.accessor('price.frequency', { header: 'Frequency', enableSorting: false }),
+  columnHelper.accessor('details.bedrooms', { header: 'Beds', enableSorting: false }),
+  columnHelper.accessor('details.bathrooms', { header: 'Baths', enableSorting: false }),
+  columnHelper.accessor('details.propertyType', { header: 'Type', enableSorting: false }),
+  columnHelper.accessor('details.furnished', { header: 'Furnished', enableSorting: false }),
   columnHelper.accessor('url', {
     header: 'Link',
-    cell: info => <a href={info.getValue()} target="_blank" rel="noreferrer">View</a>
-  })
+    enableSorting: false,
+    cell: info => <a href={info.getValue()} target="_blank" rel="noreferrer">View</a>,
+  }),
 ];
+
+interface AlreadyScrapedInfo {
+  alreadyScraped: boolean;
+  scrapedAt: string;
+  count: number;
+}
 
 export function RoomsView() {
   const queryClient = useQueryClient();
-  const [url, setUrl] = useState('https://www.rightmove.co.uk/property-to-rent/find.html?searchType=RENT&locationIdentifier=REGION%5E87490&insId=1&radius=0.0');
-  
+
+  const [selectedSource, setSelectedSource] = useState<string>(() =>
+    localStorage.getItem('selectedSource') || 'rightmove'
+  );
+  const [url, setUrl] = useState<string>(() =>
+    localStorage.getItem('scrapeUrl') || ''
+  );
+  const [alreadyScrapedInfo, setAlreadyScrapedInfo] = useState<AlreadyScrapedInfo | null>(null);
+
   const [filters, setFilters] = useState<FilterState>(() => {
     const saved = localStorage.getItem('roomFilters');
-    return saved ? JSON.parse(saved) : {
-      priceMin: '',
-      priceMax: '',
-      bedrooms: [],
-      propertyType: [],
-      furnished: [],
-      leaseType: [],
-      location: '',
-    };
+    return saved ? { ...EMPTY_FILTER, ...JSON.parse(saved) } : EMPTY_FILTER;
   });
 
   const [appliedFilters, setAppliedFilters] = useState<FilterState>(() => {
     const saved = localStorage.getItem('roomAppliedFilters');
-    return saved ? JSON.parse(saved) : {
-      priceMin: '',
-      priceMax: '',
-      bedrooms: [],
-      propertyType: [],
-      furnished: [],
-      leaseType: [],
-      location: '',
-    };
+    return saved ? { ...EMPTY_FILTER, ...JSON.parse(saved) } : EMPTY_FILTER;
   });
 
-  // Persist filters to localStorage when they change
-  useEffect(() => {
-    localStorage.setItem('roomFilters', JSON.stringify(filters));
-  }, [filters]);
+  useEffect(() => { localStorage.setItem('roomFilters', JSON.stringify(filters)); }, [filters]);
+  useEffect(() => { localStorage.setItem('roomAppliedFilters', JSON.stringify(appliedFilters)); }, [appliedFilters]);
+  useEffect(() => { localStorage.setItem('selectedSource', selectedSource); }, [selectedSource]);
+  useEffect(() => { localStorage.setItem('scrapeUrl', url); }, [url]);
 
-  // Persist applied filters to localStorage when they change
-  useEffect(() => {
-    localStorage.setItem('roomAppliedFilters', JSON.stringify(appliedFilters));
-  }, [appliedFilters]);
+  const { data: sources = [] } = useQuery({
+    queryKey: ['sources', 'rooms'],
+    queryFn: () => fetchSources('rooms'),
+    staleTime: Infinity,
+  });
+
+  const currentSourceConfig = sources.find(s => s.id === selectedSource);
 
   const { data: status } = useQuery({
     queryKey: ['status', 'rooms'],
@@ -80,7 +99,6 @@ export function RoomsView() {
     queryFn: () => fetchResults('rooms'),
   });
 
-  // When scraping finishes (transitions to idle), invalidate results to fetch final data
   useEffect(() => {
     if (status?.status === 'idle') {
       queryClient.invalidateQueries({ queryKey: ['results', 'rooms'] });
@@ -88,35 +106,35 @@ export function RoomsView() {
   }, [status?.status, queryClient]);
 
   const mutation = useMutation({
-    mutationFn: () => triggerScrape('rooms', 'rightmove', url),
+    mutationFn: (force: boolean) => triggerScrape('rooms', selectedSource, url, force),
     onSuccess: () => {
-      // Force an immediate status check
+      setAlreadyScrapedInfo(null);
       queryClient.invalidateQueries({ queryKey: ['status', 'rooms'] });
-      // Wipe the table immediately while we wait for new data
       queryClient.setQueryData(['results', 'rooms'], []);
-    }
+    },
+    onError: (err: any) => {
+      if (err.response?.status === 409) {
+        setAlreadyScrapedInfo(err.response.data);
+      }
+    },
   });
+
+  const handleSourceChange = (sourceId: string) => {
+    if (sourceId === selectedSource) return;
+    setSelectedSource(sourceId);
+    setAlreadyScrapedInfo(null);
+    // Pre-fill URL with example for the new source
+    const src = sources.find(s => s.id === sourceId);
+    if (src) setUrl(src.exampleUrl);
+  };
 
   const handleExport = () => {
     window.open('http://localhost:3001/api/export/rooms', '_blank');
   };
 
-  const handleApplyFilters = () => {
-    setAppliedFilters(filters);
-  };
-
   const handleClearFilters = () => {
-    const emptyFilters: FilterState = {
-      priceMin: '',
-      priceMax: '',
-      bedrooms: [],
-      propertyType: [],
-      furnished: [],
-      leaseType: [],
-      location: '',
-    };
-    setFilters(emptyFilters);
-    setAppliedFilters(emptyFilters);
+    setFilters(EMPTY_FILTER);
+    setAppliedFilters(EMPTY_FILTER);
   };
 
   const filteredData = useMemo(() => {
@@ -125,8 +143,14 @@ export function RoomsView() {
       if (appliedFilters.priceMax !== '' && room.price.amount > appliedFilters.priceMax) return false;
 
       if (appliedFilters.location.trim() !== '') {
-        const searchLower = appliedFilters.location.toLowerCase();
-        if (!room.location.area.toLowerCase().includes(searchLower)) return false;
+        if (!room.location.area.toLowerCase().includes(appliedFilters.location.toLowerCase())) return false;
+      }
+
+      if (appliedFilters.postcode.trim() !== '') {
+        const normalize = (p: string) => p.toUpperCase().replace(/\s+/g, '');
+        const search = normalize(appliedFilters.postcode);
+        const roomPostcode = normalize(room.location.postcode || '');
+        if (!roomPostcode.includes(search)) return false;
       }
 
       if (appliedFilters.bedrooms.length > 0) {
@@ -141,26 +165,17 @@ export function RoomsView() {
 
       if (appliedFilters.propertyType.length > 0) {
         if (!room.details.propertyType) return false;
-        const typeMatch = appliedFilters.propertyType.some(t =>
-          t.toLowerCase() === room.details.propertyType?.toLowerCase()
-        );
-        if (!typeMatch) return false;
+        if (!appliedFilters.propertyType.some(t => t.toLowerCase() === room.details.propertyType?.toLowerCase())) return false;
       }
 
       if (appliedFilters.furnished.length > 0) {
         if (!room.details.furnished) return false;
-        const furnishedMatch = appliedFilters.furnished.some(f =>
-          f.toLowerCase() === room.details.furnished?.toLowerCase()
-        );
-        if (!furnishedMatch) return false;
+        if (!appliedFilters.furnished.some(f => f.toLowerCase() === room.details.furnished?.toLowerCase())) return false;
       }
 
       if (appliedFilters.leaseType.length > 0) {
         if (!room.details.leaseType) return false;
-        const leaseMatch = appliedFilters.leaseType.some(l =>
-          l.toLowerCase() === room.details.leaseType?.toLowerCase()
-        );
-        if (!leaseMatch) return false;
+        if (!appliedFilters.leaseType.some(l => l.toLowerCase() === room.details.leaseType?.toLowerCase())) return false;
       }
 
       return true;
@@ -169,11 +184,12 @@ export function RoomsView() {
 
   const isScraping = mutation.isPending || status?.status === 'scraping';
   const scrapeCount = status?.count || 0;
-  const estimatedMax = 100; // Conservative estimate for percentage calculation
-  const progress = Math.min((scrapeCount / estimatedMax) * 100, 100);
+  const scrapeTotal = status?.total || 0;
+  const progress = scrapeTotal > 0 ? Math.min((scrapeCount / scrapeTotal) * 100, 100) : 0;
 
   const getStatusType = (): 'idle' | 'scraping' | 'complete' | 'error' => {
-    if (mutation.isError || status?.status === 'error') return 'error';
+    if (mutation.isError && !alreadyScrapedInfo) return 'error';
+    if (status?.status === 'error') return 'error';
     if (isScraping) return 'scraping';
     if (data.length > 0) return 'complete';
     return 'idle';
@@ -183,26 +199,12 @@ export function RoomsView() {
     <div className="view-container">
       <header className="view-header">
         <div className="view-header-left">
-          <h1>Rooms (Rightmove)</h1>
+          <h1>Rooms</h1>
           <StatusBadge status={getStatusType()} count={scrapeCount} />
         </div>
         <div className="action-bar">
-          <input 
-            type="text" 
-            value={url} 
-            onChange={e => setUrl(e.target.value)} 
-            placeholder="Rightmove Search URL"
-            className="url-input"
-          />
-          <button 
-            onClick={() => mutation.mutate()} 
-            disabled={isScraping}
-            className="scrape-btn"
-          >
-            {isScraping ? 'Scraping...' : 'Trigger Scrape'}
-          </button>
-          <button 
-            onClick={handleExport} 
+          <button
+            onClick={handleExport}
             disabled={data.length === 0 || isScraping}
             className="export-btn"
             title="Export to CSV"
@@ -212,39 +214,101 @@ export function RoomsView() {
         </div>
       </header>
 
+      {/* Source picker */}
+      {sources.length > 0 && (
+        <div className="source-picker">
+          {sources.map(src => (
+            <button
+              key={src.id}
+              className={`source-btn ${selectedSource === src.id ? 'active' : ''}`}
+              onClick={() => handleSourceChange(src.id)}
+              disabled={isScraping}
+            >
+              {src.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* URL input row */}
+      <div className="url-row">
+        <input
+          type="text"
+          value={url}
+          onChange={e => { setUrl(e.target.value); setAlreadyScrapedInfo(null); }}
+          placeholder={currentSourceConfig?.hint || 'Paste a search URL'}
+          className="url-input url-input-full"
+        />
+        <button
+          onClick={() => mutation.mutate(false)}
+          disabled={isScraping || !url.trim()}
+          className="scrape-btn"
+        >
+          {isScraping ? 'Scraping...' : 'Scrape'}
+        </button>
+        <button
+          onClick={() => mutation.mutate(true)}
+          disabled={isScraping || !url.trim()}
+          className="scrape-btn force-scrape-btn"
+          title="Force a fresh scrape even if this URL was scraped recently"
+        >
+          Force Re-Scrape
+        </button>
+      </div>
+
+      {currentSourceConfig && (
+        <p className="url-hint">
+          Example: <span className="url-hint-example">{currentSourceConfig.exampleUrl}</span>
+        </p>
+      )}
+
+      {alreadyScrapedInfo && !isScraping && (
+        <div className="already-scraped-warning">
+          <span>
+            This URL was already scraped on{' '}
+            <strong>{new Date(alreadyScrapedInfo.scrapedAt).toLocaleString('en-GB')}</strong>
+            {' '}({alreadyScrapedInfo.count.toLocaleString()} results).
+            Use <strong>Force Re-Scrape</strong> to fetch fresh data.
+          </span>
+          <button className="dismiss-btn" onClick={() => setAlreadyScrapedInfo(null)}>×</button>
+        </div>
+      )}
+
       {isScraping && (
         <div className="scraping-section">
           <ProgressBar progress={progress} isActive={isScraping} />
+          <p className="scrape-count-label">
+            {scrapeTotal > 0
+              ? `${scrapeCount.toLocaleString()} / ${scrapeTotal.toLocaleString()} properties scraped`
+              : `${scrapeCount.toLocaleString()} properties scraped so far...`}
+          </p>
         </div>
       )}
 
       {data.length > 0 && (
-        <FilterPanel 
+        <FilterPanel
           filters={filters}
           setFilters={setFilters}
-          onApply={handleApplyFilters}
+          onApply={() => setAppliedFilters(filters)}
           onClear={handleClearFilters}
         />
       )}
 
       {isLoading || isFetching || isScraping ? (
         <div className={`loading ${isScraping ? 'scraping' : ''}`}>
-          {isScraping ? `Scraping in progress... Found ${scrapeCount} rooms so far.` : 'Loading data...'}
+          {isScraping ? `Scraping in progress... Found ${scrapeCount.toLocaleString()} rooms so far.` : 'Loading data...'}
         </div>
       ) : data.length === 0 ? (
-        <div className="empty-state">No rooms scraped yet. Enter a Rightmove URL and trigger a scrape to get started.</div>
+        <div className="empty-state">No rooms scraped yet. Select a source, paste a search URL, and click Scrape.</div>
       ) : (
         <div className="data-section">
           <div className="results-info">
             <p>
-              Showing <strong>{filteredData.length}</strong> of <strong>{data.length}</strong> rooms
+              Showing <strong>{filteredData.length.toLocaleString()}</strong> of <strong>{data.length.toLocaleString()}</strong> rooms
               {filteredData.length !== data.length && ' (filtered)'}
             </p>
           </div>
-          <DataTable
-            data={filteredData}
-            columns={columns}
-          />
+          <DataTable data={filteredData} columns={columns} />
         </div>
       )}
     </div>

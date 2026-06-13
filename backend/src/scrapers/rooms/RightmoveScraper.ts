@@ -13,7 +13,8 @@ export class RightmoveScraper extends BaseScraper<Room> {
       const delay = options?.delayMs || 2000;
       let currentIndex = 0;
       const maxResults = 5000;
-      const seenIds = new Set<string>(); // Track seen IDs to detect when we've exhausted results
+      const seenIds = new Set<string>();
+      let totalResults = 0;
 
       try {
         while (allResults.length < maxResults) {
@@ -36,6 +37,16 @@ export class RightmoveScraper extends BaseScraper<Room> {
           if (cards.length === 0) {
             console.log(`[${this.sourceName}] No more cards found at index ${currentIndex}. Stopping.`);
             break;
+          }
+
+          // Parse total result count from first page
+          if (currentIndex === 0) {
+            const countText = $('[data-testid="search-and-result-count"]').text() ||
+                              $('.searchHeader-resultCount').text();
+            const totalMatch = countText.match(/of\s+([\d,]+)/i);
+            if (totalMatch) {
+              totalResults = Math.min(parseInt(totalMatch[1].replace(/,/g, ''), 10), maxResults);
+            }
           }
 
           let pageAdded = 0;
@@ -180,6 +191,19 @@ export class RightmoveScraper extends BaseScraper<Room> {
                 }
               }
 
+              // Extract postcode from address — try full postcode first, fall back to district
+              let postcode: string | undefined;
+              const fullPostcodeMatch = address.match(/\b([A-Z]{1,2}\d[A-Z\d]?\s?\d[A-Z]{2})\b/i);
+              if (fullPostcodeMatch) {
+                postcode = fullPostcodeMatch[1].toUpperCase().replace(/\s+/g, ' ').trim();
+              } else {
+                // District-only fallback: e.g. "E1", "SW3", "EC2A"
+                const districtMatch = address.match(/\b([A-Z]{1,2}\d[A-Z\d]?)\s*$/i);
+                if (districtMatch) {
+                  postcode = districtMatch[1].toUpperCase();
+                }
+              }
+
               // Build the unvalidated object
               const rawRoom = {
                 id: `rm_${id}`,
@@ -188,6 +212,7 @@ export class RightmoveScraper extends BaseScraper<Room> {
                 title: address,
                 location: {
                   area: address,
+                  ...(postcode && { postcode }),
                 },
                 price: {
                   amount: priceAmount,
@@ -223,7 +248,7 @@ export class RightmoveScraper extends BaseScraper<Room> {
           console.log(`[${this.sourceName}] Scraped ${pageAdded} unique rooms from index ${currentIndex}. Total: ${allResults.length}`);
 
           if (options?.onProgress) {
-            options.onProgress(allResults.length);
+            options.onProgress(allResults.length, totalResults);
           }
 
           if (pageAdded === 0) {
@@ -237,11 +262,54 @@ export class RightmoveScraper extends BaseScraper<Room> {
           await new Promise((res) => setTimeout(res, delay));
         }
         
+        console.log(`[${this.sourceName}] Scraped ${allResults.length} total rooms.`);
+        await this.enrichPostcodes(allResults, 50);
         return allResults;
       } catch (error) {
         console.error(`[${this.sourceName}] Error scraping ${url}:`, error);
         return allResults;
       }
     }) as Promise<Room[]>;
+  }
+
+  private async enrichPostcodes(rooms: Room[], maxEnrichments = 50): Promise<void> {
+    const missing = rooms.filter(r => !r.location.postcode);
+    const limit = Math.min(missing.length, maxEnrichments);
+
+    if (limit === 0) return;
+    console.log(`[${this.sourceName}] Enriching postcodes for ${limit} properties via Nominatim...`);
+
+    for (let i = 0; i < limit; i++) {
+      const room = missing[i];
+      try {
+        const encodedAddress = encodeURIComponent(room.location.area);
+        const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&addressdetails=1&countrycodes=gb&limit=1`;
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch(nominatimUrl, {
+          headers: { 'User-Agent': 'ScrapeMaster/1.0 (personal research project)' },
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+
+        if (response.ok) {
+          const results = await response.json();
+          if (results.length > 0 && results[0].address?.postcode) {
+            (room.location as any).postcode = results[0].address.postcode.toUpperCase().replace(/\s+/g, ' ').trim();
+          }
+        }
+      } catch {
+        // Silently skip — network errors, aborts, rate limits
+      }
+
+      if (i < limit - 1) {
+        await new Promise(r => setTimeout(r, 1100));
+      }
+    }
+
+    const enriched = rooms.filter(r => r.location.postcode).length;
+    console.log(`[${this.sourceName}] Postcodes: ${enriched}/${rooms.length} properties covered.`);
   }
 }
