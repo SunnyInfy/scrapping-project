@@ -4,9 +4,17 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 
-export function DataTable({ data, columns }: { data: any[], columns: any[] }) {
+interface DataTableProps {
+  data: any[];
+  columns: any[];
+  filterFunction?: (data: any[]) => any[];
+}
+
+export function DataTable({ data, columns, filterFunction }: DataTableProps) {
+  const filteredData = filterFunction ? filterFunction(data) : data;
+  
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

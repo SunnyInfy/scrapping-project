@@ -118,6 +118,73 @@ app.get('/api/results/:motive', async (req: Request, res: Response) => {
   }
 });
 
+// Header mapping for nice, human-readable column names
+const headerMapping: Record<string, string> = {
+  'title': 'Property Title',
+  'location_area': 'Location',
+  'price_amount': 'Price (£/month)',
+  'price_frequency': 'Frequency',
+  'details_bedrooms': 'Bedrooms',
+  'details_bathrooms': 'Bathrooms',
+  'details_propertyType': 'Property Type',
+  'details_furnished': 'Furnished',
+  'details_epcRating': 'EPC Rating',
+  'amenities_garden': 'Garden',
+  'amenities_parking': 'Parking',
+  'amenities_gym': 'Gym',
+  'amenities_balcony': 'Balcony',
+  'details_leaseType': 'Lease Type',
+  'agentName': 'Agent',
+  'availableDate': 'Available From',
+  'url': 'Link'
+};
+
+// Logical column order for export
+const columnOrder = [
+  'title',
+  'location_area',
+  'price_amount',
+  'price_frequency',
+  'details_bedrooms',
+  'details_bathrooms',
+  'details_propertyType',
+  'details_furnished',
+  'details_epcRating',
+  'amenities_garden',
+  'amenities_parking',
+  'amenities_gym',
+  'amenities_balcony',
+  'details_leaseType',
+  'agentName',
+  'availableDate',
+  'url'
+];
+
+// Format date from ISO string to DD/MM/YYYY
+const formatDate = (dateString?: string): string => {
+  if (!dateString) return '';
+  try {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  } catch {
+    return '';
+  }
+};
+
+// Convert boolean to "Yes" or "No"
+const formatBoolean = (value: boolean | undefined | null): string => {
+  return value === true ? 'Yes' : (value === false ? 'No' : '');
+};
+
+// Capitalize first letter of enum values
+const capitalizeEnum = (value: string | undefined | null): string => {
+  if (!value) return '';
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
+
 // Export scraped data to CSV
 app.get('/api/export/:motive', async (req: Request, res: Response) => {
   const { motive } = req.params;
@@ -139,32 +206,68 @@ app.get('/api/export/:motive', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'No data found to export.' });
     }
 
-    // Flatten nested objects (like location.area, price.amount) for CSV output
+    // Flatten nested objects and format data for CSV output
     const flattenedData = data.map((item: any) => {
-      const flat: any = { ...item };
+      const flat: any = {};
+      
+      // Extract and format properties in logical order
+      flat.title = item.title || '';
       
       if (item.location) {
-        flat.location_area = item.location.area;
-        delete flat.location;
+        flat.location_area = item.location.area || '';
       }
       
       if (item.price) {
-        flat.price_amount = item.price.amount;
-        flat.price_currency = item.price.currency;
-        flat.price_frequency = item.price.frequency;
-        delete flat.price;
+        // Format price with £ symbol
+        flat.price_amount = item.price.amount ? `£${item.price.amount}` : '';
+        flat.price_frequency = capitalizeEnum(item.price.frequency);
       }
       
       if (item.details) {
-        flat.bedrooms = item.details.bedrooms;
-        flat.bathrooms = item.details.bathrooms;
-        delete flat.details;
+        // Format bedrooms and bathrooms as numbers
+        flat.details_bedrooms = item.details.bedrooms ? String(item.details.bedrooms) : '';
+        flat.details_bathrooms = item.details.bathrooms ? String(item.details.bathrooms) : '';
+        flat.details_propertyType = capitalizeEnum(item.details.propertyType);
+        flat.details_furnished = capitalizeEnum(item.details.furnished);
+        flat.details_epcRating = item.details.epcRating || '';
+        flat.details_leaseType = capitalizeEnum(item.details.leaseType);
       }
+      
+      // Convert boolean amenities to "Yes/No"
+      if (item.amenities) {
+        flat.amenities_garden = formatBoolean(item.amenities.garden);
+        flat.amenities_parking = formatBoolean(item.amenities.parking);
+        flat.amenities_gym = formatBoolean(item.amenities.gym);
+        flat.amenities_balcony = formatBoolean(item.amenities.balcony);
+      }
+      
+      flat.agentName = item.agentName || '';
+      
+      // Format date from ISO to DD/MM/YYYY
+      const dateValue = item.details?.availableDate || item.details?.available_from;
+      flat.availableDate = formatDate(dateValue);
+      
+      flat.url = item.url || '';
 
       return flat;
     });
 
-    const csv = Papa.unparse(flattenedData);
+    // Reorder columns according to columnOrder
+    const orderedData = flattenedData.map((item: any) => {
+      const ordered: any = {};
+      columnOrder.forEach((col) => {
+        if (col in item) {
+          ordered[col] = item[col];
+        }
+      });
+      return ordered;
+    });
+
+    // Use Papa.unparse with custom header mapping
+    const csv = Papa.unparse({
+      fields: columnOrder.map((col) => headerMapping[col] || col),
+      data: orderedData.map((item: any) => columnOrder.map((col) => item[col] || ''))
+    });
 
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename=${motive}_export_${Date.now()}.csv`);

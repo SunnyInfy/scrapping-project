@@ -36,6 +36,7 @@ export class RightmoveScraper extends BaseScraper {
                     cards.each((_, element) => {
                         try {
                             const card = $(element);
+                            const cardText = card.text();
                             // Find property link - try multiple selectors for robustness
                             let linkAttr = card.find('a[class*="propertyCard-link"]').attr('href');
                             if (!linkAttr) {
@@ -71,16 +72,105 @@ export class RightmoveScraper extends BaseScraper {
                             const priceAmount = priceMatch ? parseInt(priceMatch[1].replace(/,/g, ''), 10) : 0;
                             // Bed parsing - improved with more patterns
                             let beds = 0;
-                            const rawText = card.text();
-                            if (!rawText.toLowerCase().includes('studio')) {
+                            let isStudio = false;
+                            if (cardText.toLowerCase().includes('studio')) {
+                                beds = 0;
+                                isStudio = true;
+                            }
+                            else {
                                 // Look for bedroom counts
-                                const bedMatch = rawText.match(/(\d+)\s*(?:bed|bedroom)s?/i);
+                                const bedMatch = cardText.match(/(\d+)\s*(?:bed|bedroom)s?/i);
                                 if (bedMatch)
                                     beds = parseInt(bedMatch[1], 10);
                             }
-                            else {
-                                // Studio is usually 0 beds
-                                beds = 0;
+                            // Extract bathrooms
+                            let bathrooms;
+                            const bathMatch = cardText.match(/(\d+)\s*(?:bath|bathroom)s?/i);
+                            if (bathMatch)
+                                bathrooms = parseInt(bathMatch[1], 10);
+                            // Extract property type
+                            let propertyType;
+                            const lowerCardText = cardText.toLowerCase();
+                            if (isStudio) {
+                                propertyType = 'studio';
+                            }
+                            else if (lowerCardText.includes('flat')) {
+                                propertyType = 'flat';
+                            }
+                            else if (lowerCardText.includes('bungalow')) {
+                                propertyType = 'bungalow';
+                            }
+                            else if (lowerCardText.includes('semi-detached') || lowerCardText.includes('semi detached')) {
+                                propertyType = 'semi-detached';
+                            }
+                            else if (lowerCardText.includes('terraced')) {
+                                propertyType = 'terraced';
+                            }
+                            else if (lowerCardText.includes('house')) {
+                                propertyType = 'house';
+                            }
+                            // Extract furnished status
+                            let furnished;
+                            if (lowerCardText.includes('unfurnished')) {
+                                furnished = 'unfurnished';
+                            }
+                            else if (lowerCardText.includes('part-furnished') || lowerCardText.includes('part furnished')) {
+                                furnished = 'part-furnished';
+                            }
+                            else if (lowerCardText.includes('furnished')) {
+                                furnished = 'furnished';
+                            }
+                            // Extract EPC rating
+                            let epcRating;
+                            const epcMatch = cardText.match(/EPC rating[:\s]*([A-G])/i);
+                            if (epcMatch) {
+                                epcRating = epcMatch[1].toUpperCase();
+                            }
+                            // Extract lease type
+                            let leaseType;
+                            if (lowerCardText.includes('long-term') || lowerCardText.includes('long term')) {
+                                leaseType = 'long-term';
+                            }
+                            else if (lowerCardText.includes('short-term') || lowerCardText.includes('short term')) {
+                                leaseType = 'short-term';
+                            }
+                            // Extract amenities
+                            const amenities = {
+                                garden: lowerCardText.includes('garden'),
+                                parking: lowerCardText.includes('parking') || lowerCardText.includes('garage'),
+                                gym: lowerCardText.includes('gym') || lowerCardText.includes('fitness'),
+                                balcony: lowerCardText.includes('balcony') || lowerCardText.includes('terrace'),
+                            };
+                            // Extract agent name - look for agent info section
+                            let agentName;
+                            const agentSection = card.find('[class*="agent"], [class*="landlord"]').text().trim();
+                            if (agentSection) {
+                                agentName = agentSection.substring(0, 100); // Limit to 100 chars
+                            }
+                            // Extract available date
+                            let availableDate;
+                            const dateMatch = cardText.match(/(?:available|from)\s+(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i);
+                            if (dateMatch) {
+                                try {
+                                    // Try to parse and normalize the date to ISO format
+                                    const dateParts = dateMatch[1].split(/[\/\-]/);
+                                    if (dateParts.length === 3) {
+                                        let day = parseInt(dateParts[0], 10);
+                                        let month = parseInt(dateParts[1], 10);
+                                        let year = parseInt(dateParts[2], 10);
+                                        if (dateParts[2].length === 2)
+                                            year += 2000;
+                                        if (month > 12) {
+                                            [day, month] = [month, day]; // Swap if format is DD/MM
+                                        }
+                                        if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+                                            availableDate = new Date(year, month - 1, day).toISOString().split('T')[0];
+                                        }
+                                    }
+                                }
+                                catch (e) {
+                                    // Silently skip invalid dates
+                                }
                             }
                             // Build the unvalidated object
                             const rawRoom = {
@@ -98,7 +188,15 @@ export class RightmoveScraper extends BaseScraper {
                                 },
                                 details: {
                                     bedrooms: beds,
+                                    ...(bathrooms !== undefined && { bathrooms }),
+                                    ...(propertyType && { propertyType }),
+                                    ...(furnished && { furnished }),
+                                    ...(epcRating && { epcRating }),
+                                    ...(leaseType && { leaseType }),
+                                    ...(availableDate && { availableDate }),
                                 },
+                                ...(Object.values(amenities).some(v => v) && { amenities }),
+                                ...(agentName && { agentName }),
                                 url: `https://www.rightmove.co.uk${linkAttr}`,
                                 scraped_at: new Date().toISOString(),
                             };
