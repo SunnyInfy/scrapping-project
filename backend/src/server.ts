@@ -11,7 +11,6 @@ import { GumtreeScraper } from './scrapers/rooms/GumtreeScraper';
 import {
   saveScrapedData,
   getScrapedData,
-  clearScrapedData,
   getScrapedDataFiles,
   deleteScrapedDataFile,
   saveMetadata,
@@ -94,7 +93,6 @@ app.post('/api/scrape/:motive/:source', async (req: Request, res: Response) => {
       return res.status(400).json({ error: `Scraper for motive '${motive}' and source '${source}' is not yet implemented.` });
     }
 
-    await clearScrapedData(motive as any);
     clearCacheByPrefix(`results_${motive}`);
 
     activeScrapes[motive] = { status: 'scraping', count: 0, total: 0 };

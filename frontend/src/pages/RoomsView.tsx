@@ -34,6 +34,7 @@ const columns = [
   columnHelper.accessor('price.amount', {
     header: 'Price',
     enableSorting: true,
+    sortingFn: 'basic',
     cell: info => `£${info.getValue()}`,
   }),
   columnHelper.accessor('price.frequency', { header: 'Frequency', enableSorting: false }),
@@ -60,9 +61,10 @@ export function RoomsView() {
   const [selectedSource, setSelectedSource] = useState<string>(() =>
     localStorage.getItem('selectedSource') || 'rightmove'
   );
-  const [url, setUrl] = useState<string>(() =>
-    localStorage.getItem('scrapeUrl') || ''
-  );
+  const [url, setUrl] = useState<string>(() => {
+    const src = localStorage.getItem('selectedSource') || 'rightmove';
+    return localStorage.getItem(`scrapeUrl_${src}`) || '';
+  });
   const [alreadyScrapedInfo, setAlreadyScrapedInfo] = useState<AlreadyScrapedInfo | null>(null);
 
   const [filters, setFilters] = useState<FilterState>(() => {
@@ -78,7 +80,7 @@ export function RoomsView() {
   useEffect(() => { localStorage.setItem('roomFilters', JSON.stringify(filters)); }, [filters]);
   useEffect(() => { localStorage.setItem('roomAppliedFilters', JSON.stringify(appliedFilters)); }, [appliedFilters]);
   useEffect(() => { localStorage.setItem('selectedSource', selectedSource); }, [selectedSource]);
-  useEffect(() => { localStorage.setItem('scrapeUrl', url); }, [url]);
+  useEffect(() => { localStorage.setItem(`scrapeUrl_${selectedSource}`, url); }, [url, selectedSource]);
 
   const { data: sources = [] } = useQuery({
     queryKey: ['sources', 'rooms'],
@@ -109,6 +111,8 @@ export function RoomsView() {
     mutationFn: (force: boolean) => triggerScrape('rooms', selectedSource, url, force),
     onSuccess: () => {
       setAlreadyScrapedInfo(null);
+      setFilters(EMPTY_FILTER);
+      setAppliedFilters(EMPTY_FILTER);
       queryClient.invalidateQueries({ queryKey: ['status', 'rooms'] });
       queryClient.setQueryData(['results', 'rooms'], []);
     },
@@ -123,9 +127,9 @@ export function RoomsView() {
     if (sourceId === selectedSource) return;
     setSelectedSource(sourceId);
     setAlreadyScrapedInfo(null);
-    // Pre-fill URL with example for the new source
+    const stored = localStorage.getItem(`scrapeUrl_${sourceId}`);
     const src = sources.find(s => s.id === sourceId);
-    if (src) setUrl(src.exampleUrl);
+    setUrl(stored || src?.exampleUrl || '');
   };
 
   const handleExport = () => {
@@ -308,7 +312,7 @@ export function RoomsView() {
               {filteredData.length !== data.length && ' (filtered)'}
             </p>
           </div>
-          <DataTable data={filteredData} columns={columns} />
+          <DataTable data={filteredData} columns={columns} storageKey="rooms" />
         </div>
       )}
     </div>

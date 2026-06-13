@@ -13,15 +13,37 @@ const PAGE_SIZE = 50;
 interface DataTableProps {
   data: any[];
   columns: any[];
+  storageKey?: string;
 }
 
-export function DataTable({ data, columns }: DataTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [pageIndex, setPageIndex] = useState(0);
+function loadFromStorage<T>(key: string, fallback: T): T {
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+export function DataTable({ data, columns, storageKey }: DataTableProps) {
+  const [sorting, setSorting] = useState<SortingState>(() =>
+    storageKey ? loadFromStorage<SortingState>(`${storageKey}_sorting`, []) : []
+  );
+  const [pageIndex, setPageIndex] = useState(() =>
+    storageKey ? loadFromStorage<number>(`${storageKey}_page`, 0) : 0
+  );
 
   useEffect(() => {
     setPageIndex(0);
   }, [data]);
+
+  useEffect(() => {
+    if (storageKey) localStorage.setItem(`${storageKey}_sorting`, JSON.stringify(sorting));
+  }, [sorting, storageKey]);
+
+  useEffect(() => {
+    if (storageKey) localStorage.setItem(`${storageKey}_page`, String(pageIndex));
+  }, [pageIndex, storageKey]);
 
   const table = useReactTable({
     data,
